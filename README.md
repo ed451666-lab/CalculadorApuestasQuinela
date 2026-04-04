@@ -11,7 +11,16 @@ Este proyecto es 100% paralelo al predictor principal y no se integra con ningun
 - Resuelve el `race_id` real de Teletrak para esa carrera.
 - Consulta la matriz real de probables Quinela disponible en Teletrak.
 - Filtra únicamente las 15 combinaciones de la Quinela Box.
-- Muestra un resumen rápido y una tabla clara con los dividendos actuales.
+- Muestra un resumen rápido, un semáforo informativo, cálculo de costo total/ROI y una tabla clara con dividendos, retorno bruto y ganancia neta.
+
+## Comportamiento en tiempo real
+
+- Cada clic en `Consultar Probables` hace una consulta nueva a Teletrak.
+- Los dividendos mostrados corresponden al momento exacto de esa consulta.
+- No se usan datos cacheados persistentes.
+- No se usa simulación.
+- No hay auto refresh.
+- El monto por combinación se define manualmente desde la UI para estimar costo total, retorno bruto y ganancia neta.
 
 ## Qué no hace
 
@@ -56,6 +65,7 @@ py -m streamlit run app.py
 3. Ingresar número de carrera.
 4. Ingresar 6 números de caballo distintos.
 5. Presionar `Consultar Probables`.
+6. Si quieres ver valores actualizados, vuelve a presionar el botón manualmente.
 
 ## Despliegue en Streamlit Community Cloud
 
