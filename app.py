@@ -252,14 +252,43 @@ def style_roi_table(frame: pd.DataFrame) -> pd.io.formats.style.Styler:
     def style_dividend_row(row: pd.Series) -> list[str]:
         category = str(row.get("Categoría", ""))
         if category == "Verde":
-            bg = "background-color: #dff7e7; color: #14532d;"
+            highlight = "background-color: #dff7e7; color: #14532d; font-weight: 700;"
         elif category == "Amarillo":
-            bg = "background-color: #fff7db; color: #854d0e;"
+            highlight = "background-color: #fff7db; color: #854d0e; font-weight: 700;"
         else:
-            bg = "background-color: #fbe4e6; color: #9f1239;"
-        return [bg if column in {"Categoría", "Dividendo actual"} else "" for column in row.index]
+            highlight = "background-color: #fbe4e6; color: #9f1239; font-weight: 700;"
 
-    return frame.style.apply(style_dividend_row, axis=1).format(
+        styles: list[str] = []
+        for column in row.index:
+            if column == "Combinación":
+                styles.append("background-color: #101c2d; color: #f5f7fb; font-weight: 700;")
+            elif column in {"Retorno bruto ($)", "Ganancia neta ($)"}:
+                styles.append("background-color: #0f1724; color: #f5f7fb; font-weight: 650;")
+            elif column in {"Categoría", "Dividendo actual"}:
+                styles.append(highlight)
+            else:
+                styles.append("background-color: #0f1724; color: #f5f7fb;")
+        return styles
+
+    return frame.style.apply(style_dividend_row, axis=1).set_table_styles(
+        [
+            {
+                "selector": "th",
+                "props": [
+                    ("background-color", "#142338"),
+                    ("color", "#f8fbff"),
+                    ("font-weight", "700"),
+                    ("border", "1px solid rgba(148, 163, 184, 0.18)"),
+                ],
+            },
+            {
+                "selector": "td",
+                "props": [
+                    ("border", "1px solid rgba(148, 163, 184, 0.14)"),
+                ],
+            },
+        ]
+    ).format(
         {
             "Dividendo actual": lambda value: f"{float(value):.2f}",
             "Retorno bruto ($)": lambda value: format_currency(float(value)),
