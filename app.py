@@ -364,11 +364,7 @@ def main() -> None:
     )
 
     table = build_table(probables, amount_per_combination)
-    st.dataframe(
-        style_roi_table(table),
-        use_container_width=True,
-        hide_index=True,
-    )
+    st.table(style_roi_table(table))
 
     st.subheader("Resumen económico")
     econ_one = st.columns(3)
