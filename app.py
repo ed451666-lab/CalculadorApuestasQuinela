@@ -351,6 +351,7 @@ def main() -> None:
     values = sorted(float(value) for value in probables.values())
     summary = build_summary(values, amount_per_combination)
 
+    st.subheader("Tabla de probables")
     st.markdown(
         """
         <div class="legend">
@@ -362,19 +363,12 @@ def main() -> None:
         unsafe_allow_html=True,
     )
 
-    st.subheader("Resumen rápido")
-    row_one = st.columns(5)
-    row_one[0].metric("Total combinaciones", str(summary["total"]))
-    row_one[1].metric("Mínimo", f"{summary['min']:.2f}")
-    row_one[2].metric("Máximo", f"{summary['max']:.2f}")
-    row_one[3].metric("Mediana", f"{summary['median']:.2f}")
-    row_one[4].metric("> 10", str(summary["gt_10"]))
-
-    row_two = st.columns(4)
-    row_two[0].metric("> 15", str(summary["gt_15"]))
-    row_two[1].metric("< 10", str(summary["lt_10"]))
-    row_two[2].metric("% > 15", f"{summary['pct_gt_15']:.1f}%")
-    row_two[3].metric("% < 10", f"{summary['pct_lt_10']:.1f}%")
+    table = build_table(probables, amount_per_combination)
+    st.dataframe(
+        style_roi_table(table),
+        use_container_width=True,
+        hide_index=True,
+    )
 
     st.subheader("Resumen económico")
     econ_one = st.columns(3)
@@ -395,13 +389,19 @@ def main() -> None:
         f"Combinaciones de alto valor: {summary['high_value']}"
     )
 
-    st.subheader("Tabla de probables")
-    table = build_table(probables, amount_per_combination)
-    st.dataframe(
-        style_roi_table(table),
-        use_container_width=True,
-        hide_index=True,
-    )
+    st.subheader("Resumen rápido")
+    row_one = st.columns(5)
+    row_one[0].metric("Total combinaciones", str(summary["total"]))
+    row_one[1].metric("Mínimo", f"{summary['min']:.2f}")
+    row_one[2].metric("Máximo", f"{summary['max']:.2f}")
+    row_one[3].metric("Mediana", f"{summary['median']:.2f}")
+    row_one[4].metric("> 10", str(summary["gt_10"]))
+
+    row_two = st.columns(4)
+    row_two[0].metric("> 15", str(summary["gt_15"]))
+    row_two[1].metric("< 10", str(summary["lt_10"]))
+    row_two[2].metric("% > 15", f"{summary['pct_gt_15']:.1f}%")
+    row_two[3].metric("% < 10", f"{summary['pct_lt_10']:.1f}%")
 
     fetched_at = result.get("fetched_at", "Sin timestamp")
     st.caption(f"Consulta realizada: {fetched_at}")
